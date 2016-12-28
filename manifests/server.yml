@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gocd
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gocd-server
+  namespace: gocd
+  labels:
+    name: gocd-server
+    version: 16.12.0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: gocd-server
+    spec:
+      containers:
+      - name: gocd-server
+        image: gocd/gocd-server:16.12.0
+        env:
+        - name: AGENT_KEY
+          value: 123456789abcdef
+        ports:
+        - name: gocd-http
+          containerPort: 8153
+        - name: gocd-https
+          containerPort: 8154
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gocd-server
+  namespace: 
+  labels:
+    name: gocd-server
+spec:
+  type: NodePort
+  ports:
+  - name: gocd-http
+    port: 8153
+    targetPort: gocd-http
+  - name: gocd-https
+    port: 8154
+    targetPort: gocd-https
+  selector:
+    name: gocd-server
