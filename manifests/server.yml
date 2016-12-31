@@ -35,7 +35,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: gocd-server
-  namespace: 
+  namespace: gocd
   labels:
     name: gocd-server
 spec:
